@@ -30,12 +30,15 @@ module.exports = {
         const track = player.queue.current;
         const trackTitle = formatText(track.title);
         const trackArtist = formatText(track.author);
+
+        await interaction.deferReply();
+
         const lyricText = await lyricFind(client, trackTitle, trackArtist);
 
         if (!lyricText) {
             embed.setDescription(`No lyrics found for: \`${trackTitle} - ${trackArtist}\``);
 
-            return interaction.reply({ embeds: [embed], ephemeral: true });
+            return interaction.editReply({ embeds: [embed], ephemeral: true });
         }
 
         if (lyricText.length <= 4096) {
@@ -47,7 +50,7 @@ module.exports = {
                 .setThumbnail(track.artworkUrl)
                 .setDescription(lyricText);
 
-            return interaction.reply({ embeds: [embed] });
+            return interaction.editReply({ embeds: [embed] });
         } else {
             embed
                 .setAuthor({
@@ -62,7 +65,7 @@ module.exports = {
                 new ButtonBuilder().setURL(lyricUrl.replace("http", "https")).setLabel("Full Lyrics").setStyle(ButtonStyle.Link),
             );
 
-            return interaction.reply({ embeds: [embed], components: [lyricButton] });
+            return interaction.editReply({ embeds: [embed], components: [lyricButton] });
         }
     },
 };

@@ -32,13 +32,15 @@ module.exports = {
             return interaction.reply({ embeds: [embed], ephemeral: true });
         }
 
+        await interaction.deferReply();
+
         const query = interaction.options.getString("query");
         const result = await client.rainlink.search(query, { requester: interaction.member });
 
         if (result.type === "EMPTY" || result.type === "ERROR" || !result.tracks.length) {
             embed.setDescription(`No results found for your query.`);
 
-            return interaction.reply({ embeds: [embed], ephemeral: true });
+            return interaction.editReply({ embeds: [embed], ephemeral: true });
         }
 
         if (!player) {
@@ -65,7 +67,7 @@ module.exports = {
             embed.setDescription(`Added **[${trackTitle} - ${trackAuthor}](${track.uri})** - \`${convertTime(track.duration)}\`.`);
         }
 
-        await interaction.reply({ embeds: [embed] });
+        await interaction.editReply({ embeds: [embed] });
 
         if (!player.playing) return player.play();
     },

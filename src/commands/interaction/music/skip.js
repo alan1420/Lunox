@@ -17,6 +17,12 @@ module.exports = {
     run: async (client, interaction, player) => {
         const embed = new EmbedBuilder().setColor(client.config.embedColor);
 
+        if (player && player.voiceId !== interaction.member.voice.channelId) {
+            embed.setDescription(`You must be in the same voice channel as the bot.`);
+
+            return interaction.reply({ embeds: [embed], ephemeral: true });
+        }
+
         if (player.queue.isEmpty && !client.data.get("autoplay", player.guildId)) {
             embed.setDescription(`Queue is empty. Skip not possible.`);
 

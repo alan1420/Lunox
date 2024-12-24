@@ -37,14 +37,14 @@ module.exports = {
             return interaction.reply({ embeds: [embed], ephemeral: true });
         }
 
-        await interaction.deferReply({ ephemeral: true });
-
         const position = interaction.options.getInteger("position");
 
         if (position < 1 || position >= player.queue.length) {
             embed.setDescription(`Invalid track number.`);
-            return interaction.editReply({ embeds: [embed], ephemeral: true }); 
+            return interaction.reply({ embeds: [embed], ephemeral: true }); 
         }
+
+        await interaction.deferReply();
 
         const cuttedQueue = player.queue.splice(0, position)
         const nowCurrentTrack = cuttedQueue.splice(-1)[0]

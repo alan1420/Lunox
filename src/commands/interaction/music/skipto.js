@@ -56,7 +56,7 @@ module.exports = {
 
         // player.skip();
 
-        embed.setDescription(`Skipped the current song to specific track.`);
+        embed.setDescription(`Skipped current song to specific track.`);
 
         return interaction.editReply({ embeds: [embed] });
     },

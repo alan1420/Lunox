@@ -2,7 +2,7 @@ const { EmbedBuilder } = require("discord.js");
 
 module.exports = {
     name: "skipto",
-    description: "Skip the current song and jump to specific track",
+    description: "Skip current song and jump to specific track",
     category: "music",
     options: [
         {

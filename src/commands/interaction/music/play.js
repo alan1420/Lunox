@@ -34,6 +34,18 @@ module.exports = {
 
         await interaction.deferReply();
 
+        if (player.voice.state === 5) {
+            console.log("Bot was disconnected. Trying to connect again...");
+            await player.stop(true);
+            player = await client.rainlink.create({
+                guildId: interaction.guildId,
+                textId: interaction.channelId,
+                voiceId: interaction.member.voice.channelId,
+                shardId: interaction.guild.shardId,
+                deaf: true,
+            });
+        }
+        
         const query = interaction.options.getString("query");
         const result = await client.rainlink.search(query, { requester: interaction.member });
 

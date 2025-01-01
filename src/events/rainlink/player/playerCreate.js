@@ -1,9 +1,7 @@
-import fetch from 'node-fetch';
-
 module.exports = async (client, player) => {
     const guild = await client.guilds.cache.get(player.guildId);
     const guildData = client.data.get(`guildData_${guild.id}`);
-    const session = player.voice.sessionId
+    const session = player.node.driver.sessionId
 
     if (guildData.reconnect.status) {
         console.debug(`[DEBUG] Player reconnected to [${guild.name}] (${guild.id})`);

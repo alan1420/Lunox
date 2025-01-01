@@ -9,7 +9,7 @@ module.exports = async (client, player) => {
         console.debug(`[DEBUG] Player created in [${guild.name}] (${guild.id})`);
     }
 
-    let url = `http://localhost:2333/v4/sessions/${session}/players/${guild.id}?noReplace=false`;
+    let url = `http://server:2333/v4/sessions/${session}/players/${guild.id}?noReplace=false`;
 
     let options = {
       method: 'PATCH',

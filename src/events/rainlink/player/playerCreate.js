@@ -14,7 +14,7 @@ module.exports = async (client, player) => {
     let options = {
       method: 'PATCH',
       headers: {'Content-Type': 'application/json', Authorization: 'youshallnotpass'},
-      body: '{"filters":{"pluginFilters":{"normalization":{"maxAmplitude":0.9,"adaptive":true}}}}'
+      body: '{"filters":{"pluginFilters":{"normalization":{"maxAmplitude":0.5,"adaptive":true}}}}'
     };
 
     fetch(url, options)

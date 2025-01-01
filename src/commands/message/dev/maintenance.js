@@ -19,16 +19,20 @@ module.exports = {
         const embed = new EmbedBuilder().setColor(client.config.embedColor);
         const maintenance = client.data.get("maintenance");
 
-        if (maintenance) {
-            client.data.set("maintenance", false);
-
-            embed.setDescription(`Maintenance mode is now \`disabled\`.`);
+        const msgGuildID = message.guildId
+        if (msgGuildID === "210041951435620352") {
+            if (maintenance) {
+                client.data.set("maintenance", false);
+    
+                embed.setDescription(`Maintenance mode is now \`disabled\`.`);
+            } else {
+                client.data.set("maintenance", true);
+    
+                embed.setDescription(`Maintenance mode is now \`enabled\`.`);
+            }
         } else {
-            client.data.set("maintenance", true);
-
-            embed.setDescription(`Maintenance mode is now \`enabled\`.`);
-        }
-
+            embed.setDescription(`You cannot use this command.`);
+        }    
         return message.reply({ embeds: [embed] });
     },
 };

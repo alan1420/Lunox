@@ -30,9 +30,7 @@ module.exports = async (client, player) => {
         .setDescription(`The queue is empty. You can disable this by using \`247\` command.`);
 
     await delay(client.config.leaveTimeout);
-    
-    const guildData = client.data.get(`guildData_${guild.id}`);
-    if (guildData && !guildData.reconnect.status) {
+    if (!guildData.reconnect.status) {
         const isNotPlaying = !player.playing && !player.queue.currennt;
         if (isNotPlaying) {
             await player.destroy();    

@@ -29,13 +29,19 @@ module.exports = async (client, player) => {
 
         const embed = new EmbedBuilder()
             .setColor(client.config.embedColor)
-            .setDescription(`The queue is empty. You can disable this by using \`247\` command.`);
+            .setDescription(`The queue is empty. Bot will leave in 10 seconds. You can disable this by using \`247\` command.`);
 
         if (channel) await channel.send({ embeds: [embed] });
 
-        return player.destroy();
+        await delay(client.config.leaveTimeout);
+        const isNotPlaying = !player.playing && !player.queue.currennt;
+        if (isNotPlaying) await player.destroy();
     }
 };
+
+function delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 /**
  * Project: Lunox

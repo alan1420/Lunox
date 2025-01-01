@@ -39,6 +39,10 @@ module.exports = async (client, player) => {
     }
 };
 
+function delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 /**
  * Project: Lunox
  * Author: adh319`

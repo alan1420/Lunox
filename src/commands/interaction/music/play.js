@@ -34,7 +34,7 @@ module.exports = {
 
         await interaction.deferReply();
 
-        if (player.voice.state === 5) {
+        if (player && player.voice.state === 5) {
             console.log("Bot was disconnected. Trying to connect again...");
             await player.stop(true);
             player = await client.rainlink.create({

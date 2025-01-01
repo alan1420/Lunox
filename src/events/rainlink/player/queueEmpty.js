@@ -29,7 +29,7 @@ module.exports = async (client, player) => {
 
         const embed = new EmbedBuilder()
             .setColor(client.config.embedColor)
-            .setDescription(`The queue is empty. Bot will leave in 10 seconds. You can disable this by using \`247\` command.`);
+            .setDescription(`The queue is empty. Bot will leave in 3 minutes. You can disable this by using \`247\` command.`);
 
         if (channel) await channel.send({ embeds: [embed] });
 

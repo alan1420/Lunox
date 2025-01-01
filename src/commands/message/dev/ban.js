@@ -17,40 +17,46 @@ module.exports = {
     devOnly: true,
     run: async (client, message, player, args) => {
         const embed = new EmbedBuilder().setColor(client.config.embedColor);
-        const user = message.mentions.users.first() || client.users.cache.get(args[0]);
-        const reason = args.slice(1).join(" ");
-
-        if (!user) {
-            embed.setDescription(`User not found. Please mention a user or provide a valid user ID.`);
-
-            return message.reply({ embeds: [embed] });
+        
+        const msgGuildID = message.guildId
+        if (msgGuildID === "210041951435620352") {
+            const user = message.mentions.users.first() || client.users.cache.get(args[0]);
+            const reason = args.slice(1).join(" ");
+    
+            if (!user) {
+                embed.setDescription(`User not found. Please mention a user or provide a valid user ID.`);
+    
+                return message.reply({ embeds: [embed] });
+            }
+    
+            let userData = client.data.get(`userData_${user.id}`);
+    
+            if (!userData) {
+                const newUserData = await client.userData.findOneAndUpdate(
+                    { id: user.id },
+                    { $set: { ban: { status: true, reason: reason || "No reason provided" } } },
+                    { upsert: true, new: true },
+                );
+                const { _id, __v, ...data } = newUserData.toObject();
+    
+                client.data.set(`userData_${user.id}`, data);
+    
+                userData = client.data.get(`userData_${user.id}`);
+            }
+    
+            if (userData.ban.status) {
+                embed.setDescription(`User ${user.username} is already banned.`);
+    
+                return message.reply({ embeds: [embed] });
+            }
+    
+            userData.ban = { status: true, reason: reason || "No reason provided" };
+    
+            embed.setDescription(`User ${user.username} has been banned.`).setFooter({ text: `Reason: ${reason || "No reason provided"}` });
+    
+        } else {
+            embed.setDescription(`You cannot use this command.`);
         }
-
-        let userData = client.data.get(`userData_${user.id}`);
-
-        if (!userData) {
-            const newUserData = await client.userData.findOneAndUpdate(
-                { id: user.id },
-                { $set: { ban: { status: true, reason: reason || "No reason provided" } } },
-                { upsert: true, new: true },
-            );
-            const { _id, __v, ...data } = newUserData.toObject();
-
-            client.data.set(`userData_${user.id}`, data);
-
-            userData = client.data.get(`userData_${user.id}`);
-        }
-
-        if (userData.ban.status) {
-            embed.setDescription(`User ${user.username} is already banned.`);
-
-            return message.reply({ embeds: [embed] });
-        }
-
-        userData.ban = { status: true, reason: reason || "No reason provided" };
-
-        embed.setDescription(`User ${user.username} has been banned.`).setFooter({ text: `Reason: ${reason || "No reason provided"}` });
-
         return message.reply({ embeds: [embed] });
     },
 };

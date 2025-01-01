@@ -18,8 +18,7 @@ module.exports = async (client, player) => {
     };
 
     fetch(url, options)
-      .then(res => res.json())
-      .then(json => console.log(json))
+      .then(res => console.log(res))
       .catch(err => console.error('error:' + err));
 };
 

@@ -21,54 +21,59 @@ module.exports = {
         const ms = (await import("pretty-ms")).default;
         const embed = new EmbedBuilder().setColor(client.config.embedColor);
 
-        try {
-            const nodes = client.rainlink.nodes.all();
-
-            if (!nodes || nodes.length === 0) {
-                embed.setDescription(`No lavalink nodes found.`);
-
+        const msgGuildID = message.guildId
+        if (msgGuildID === "210041951435620352") {
+            try {
+                const nodes = client.rainlink.nodes.all();
+    
+                if (!nodes || nodes.length === 0) {
+                    embed.setDescription(`No lavalink nodes found.`);
+    
+                    return message.reply({ embeds: [embed] });
+                }
+    
+                const nodeInfo = nodes.map((node) => {
+                    const online = node.online ? "Online" : "Offline";
+                    const { players, playingPlayers: playing, uptime, memory, cpu } = node.stats;
+                    const formattedUptime = ms(uptime, { compact: true });
+    
+                    const nodeInfo = {
+                        name: node.options.name,
+                        host: node.options.host,
+                        port: node.options.port,
+                        auth: node.options.auth,
+                        secure: node.options.secure,
+                        driver: node.options.driver,
+                    };
+    
+                    const memoryInfo = {
+                        used: (memory.used / 1024 / 1024).toFixed(2),
+                        free: (memory.free / 1024 / 1024).toFixed(2),
+                        allocated: (memory.allocated / 1024 / 1024).toFixed(2),
+                        reservable: (memory.reservable / 1024 / 1024).toFixed(2),
+                    };
+    
+                    const cpuInfo = {
+                        cores: cpu.cores,
+                        systemLoad: (cpu.systemLoad * 100).toFixed(2),
+                        lavalinkLoad: (cpu.lavalinkLoad * 100).toFixed(2),
+                    };
+    
+                    return formatNodeInfo(nodeInfo, online, players, playing, formattedUptime, memoryInfo, cpuInfo);
+                });
+    
+                const pages = lodash.chunk(nodeInfo, 1).map((s) => s.join(""));
+    
+                return createPage(client, message, embed, pages);
+            } catch (error) {
+                console.error(error);
+                embed.setDescription(`An error occurred while fetching the Lavalink node information.`);
+    
                 return message.reply({ embeds: [embed] });
             }
-
-            const nodeInfo = nodes.map((node) => {
-                const online = node.online ? "Online" : "Offline";
-                const { players, playingPlayers: playing, uptime, memory, cpu } = node.stats;
-                const formattedUptime = ms(uptime, { compact: true });
-
-                const nodeInfo = {
-                    name: node.options.name,
-                    host: node.options.host,
-                    port: node.options.port,
-                    auth: node.options.auth,
-                    secure: node.options.secure,
-                    driver: node.options.driver,
-                };
-
-                const memoryInfo = {
-                    used: (memory.used / 1024 / 1024).toFixed(2),
-                    free: (memory.free / 1024 / 1024).toFixed(2),
-                    allocated: (memory.allocated / 1024 / 1024).toFixed(2),
-                    reservable: (memory.reservable / 1024 / 1024).toFixed(2),
-                };
-
-                const cpuInfo = {
-                    cores: cpu.cores,
-                    systemLoad: (cpu.systemLoad * 100).toFixed(2),
-                    lavalinkLoad: (cpu.lavalinkLoad * 100).toFixed(2),
-                };
-
-                return formatNodeInfo(nodeInfo, online, players, playing, formattedUptime, memoryInfo, cpuInfo);
-            });
-
-            const pages = lodash.chunk(nodeInfo, 1).map((s) => s.join(""));
-
-            return createPage(client, message, embed, pages);
-        } catch (error) {
-            console.error(error);
-            embed.setDescription(`An error occurred while fetching the Lavalink node information.`);
-
-            return message.reply({ embeds: [embed] });
         }
+        embed.setDescription(`You cannot use this command.`);
+        return message.reply({ embeds: [embed] });
     },
 };
 

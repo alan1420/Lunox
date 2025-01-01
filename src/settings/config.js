@@ -49,8 +49,8 @@ module.exports = {
     ],
     rainlinkNodes: [
         {
-            name: "Lunox",
-            host: "localhost",
+            name: "Localhost",
+            host: "server",
             port: 2333,
             auth: "youshallnotpass",
             secure: false,
